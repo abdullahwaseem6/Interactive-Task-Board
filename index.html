@@ -17,6 +17,10 @@
     <section class="controls-section">
       <form id="task-form" class="task-form">
         <input type="text" id="task-title" placeholder="Task title..." required />
+
+        <!-- NEW: description box (optional, so no "required") -->
+        <textarea id="task-description" placeholder="Description (optional)..." rows="2"></textarea>
+
         <select id="task-category" required>
           <option value="" disabled selected>Select Category</option>
           <option value="Development">Development</option>
