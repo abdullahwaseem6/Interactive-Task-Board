@@ -4,7 +4,7 @@ let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 // DOM Element References
 const taskForm = document.getElementById('task-form');
 const taskTitle = document.getElementById('task-title');
-const taskDescription = document.getElementById('task-description'); // NEW (1): find the description box
+const taskDescription = document.getElementById('task-description');
 const taskCategory = document.getElementById('task-category');
 const taskPriority = document.getElementById('task-priority');
 const searchInput = document.getElementById('search-input');
@@ -30,7 +30,7 @@ function handleAddTask(e) {
   const newTask = {
     id: Date.now().toString(),
     title: taskTitle.value.trim(),
-    description: taskDescription.value.trim(), // NEW (2): save the description
+    description: taskDescription.value.trim(),
     category: taskCategory.value,
     priority: taskPriority.value,
     status: 'todo'
@@ -97,6 +97,11 @@ function renderTasks() {
   document.getElementById('count-todo').textContent = counts['todo'];
   document.getElementById('count-in-progress').textContent = counts['in-progress'];
   document.getElementById('count-completed').textContent = counts['completed'];
+
+  // NEW: header counter, active vs completed, counted from ALL tasks (search/filter don't change it)
+  const completedCount = tasks.filter(task => task.status === 'completed').length;
+  document.getElementById('count-active').textContent = tasks.length - completedCount;
+  document.getElementById('count-done').textContent = completedCount;
 }
 
 // Helper: Create Task DOM element
