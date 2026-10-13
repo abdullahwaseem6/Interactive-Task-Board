@@ -1,15 +1,34 @@
-:root {
-  --bg-primary: #f4f6f9;
-  --card-bg: #ffffff;
-  --text-main: #2c3e50;
-  --text-muted: #7f8c8d;
-  --accent-color: #3498db;
-  --border-color: #e2e8f0;
+/* =========================================================
+   Sprint Wall - styles
+   All colours live in :root, so the whole look can be
+   changed (or swapped for a light theme) in one place.
+   ========================================================= */
 
-  /* Priority Palette */
-  --priority-low: #2ecc71;
-  --priority-medium: #f39c12;
-  --priority-high: #e74c3c;
+:root {
+  color-scheme: dark; /* tells the browser to draw dropdowns and scrollbars in dark style */
+
+  /* Surfaces (darkest to lightest) */
+  --bg-primary: #0c0c0e;   /* page background */
+  --input-bg: #0f0f12;     /* text boxes and dropdowns */
+  --column-bg: #111114;    /* the 3 columns */
+  --surface: #141418;      /* the form box */
+  --card-bg: #1b1b20;      /* task cards */
+
+  /* Text */
+  --text-main: #f2f2f4;
+  --text-muted: #8e8e98;
+
+  /* Buttons and lines */
+  --accent-color: #f2f2f4; /* white/silver button */
+  --accent-text: #0c0c0e;  /* black text on the white button */
+  --accent-hover: #c9c9cf;
+  --border-color: #26262d;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+  /* Priority Palette: the only real colours on the page */
+  --priority-low: #3ddc84;    /* green */
+  --priority-medium: #f5b83d; /* amber */
+  --priority-high: #ff5f56;   /* coral red */
 }
 
 * {
@@ -19,7 +38,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-main);
   line-height: 1.6;
@@ -31,13 +50,16 @@ body {
   margin: 0 auto;
 }
 
+/* Header */
 .app-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin: 20px 0 36px;
 }
 
 .app-header h1 {
-  font-size: 2.2rem;
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em; /* letters slightly closer together: looks more premium */
   color: var(--text-main);
 }
 
@@ -45,12 +67,13 @@ body {
   color: var(--text-muted);
 }
 
-/* Controls */
+/* Controls (form + search) */
 .controls-section {
-  background: var(--card-bg);
+  background: var(--surface);
+  border: 1px solid var(--border-color);
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;
@@ -63,12 +86,25 @@ body {
   flex-wrap: wrap;
 }
 
-input, select, .btn {
+input, select, textarea, .btn {
   padding: 10px 14px;
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text-main);
   font-size: 0.95rem;
+  font-family: inherit;
   outline: none;
+  transition: border-color 0.2s ease;
+}
+
+/* When you click into a field, its border lights up */
+input:focus, select:focus, textarea:focus {
+  border-color: var(--text-muted);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
 }
 
 input[type="text"] {
@@ -76,17 +112,25 @@ input[type="text"] {
   min-width: 200px;
 }
 
+/* Description box on its own full-width row, under the other fields */
+#task-description {
+  flex: 1 1 100%;
+  order: 1;
+  resize: vertical;
+  min-height: 60px;
+}
+
 .btn-primary {
   background-color: var(--accent-color);
-  color: #fff;
+  color: var(--accent-text);
   border: none;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 800;
   transition: background-color 0.2s ease;
 }
 
 .btn-primary:hover {
-  background-color: #2980b9;
+  background-color: var(--accent-hover);
 }
 
 /* Board Layout */
@@ -97,8 +141,9 @@ input[type="text"] {
 }
 
 .column {
-  background-color: #ebedf0;
-  border-radius: 8px;
+  background-color: var(--column-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
   padding: 15px;
   min-height: 450px;
   display: flex;
@@ -108,22 +153,25 @@ input[type="text"] {
 .column-header {
   display: flex;
   justify-content: space-between;
-  align-items: centre;
+  align-items: center;
   margin-bottom: 15px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #dcdfe4;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .column-header h2 {
   font-size: 1.1rem;
+  font-weight: 800;
 }
 
 .task-count {
-  background: #dcdfe4;
-  padding: 2px 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 2px 10px;
   border-radius: 12px;
   font-size: 0.85rem;
-  font-weight: bold;
+  font-weight: 800;
 }
 
 .task-list {
@@ -136,35 +184,49 @@ input[type="text"] {
 /* Task Cards */
 .task-card {
   background: var(--card-bg);
-  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--border-color); /* replaced by the priority colour below */
+  border-radius: 10px;
   padding: 14px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border-left: 5px solid var(--border-color);
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
+/* Priority colour: the left edge of the card */
 .task-card[data-priority="Low"] { border-left-color: var(--priority-low); }
 .task-card[data-priority="Medium"] { border-left-color: var(--priority-medium); }
 .task-card[data-priority="High"] { border-left-color: var(--priority-high); }
 
+/* Priority colour: the "High Priority" text too (it is the last <span> in .task-meta) */
+.task-card[data-priority="Low"] .task-meta span:last-child { color: var(--priority-low); }
+.task-card[data-priority="Medium"] .task-meta span:last-child { color: var(--priority-medium); }
+.task-card[data-priority="High"] .task-meta span:last-child { color: var(--priority-high); }
+
 .task-card-title {
-  font-weight: 600;
+  font-weight: 800;
   font-size: 1rem;
+}
+
+.task-card-description {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .task-meta {
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
+  font-weight: 600;
   color: var(--text-muted);
 }
 
 .task-actions {
   display: flex;
   justify-content: space-between;
-  align-items: centre;
+  align-items: center;
   margin-top: 6px;
 }
 
@@ -173,7 +235,9 @@ input[type="text"] {
   color: var(--priority-high);
   border: none;
   cursor: pointer;
+  font-family: inherit;
   font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .btn-danger:hover {
