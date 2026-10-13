@@ -4,6 +4,7 @@ let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 // DOM Element References
 const taskForm = document.getElementById('task-form');
 const taskTitle = document.getElementById('task-title');
+const taskDescription = document.getElementById('task-description'); // NEW (1): find the description box
 const taskCategory = document.getElementById('task-category');
 const taskPriority = document.getElementById('task-priority');
 const searchInput = document.getElementById('search-input');
@@ -12,7 +13,6 @@ const categoryFilter = document.getElementById('category-filter');
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   renderTasks();
-  
   taskForm.addEventListener('submit', handleAddTask);
   searchInput.addEventListener('input', renderTasks);
   categoryFilter.addEventListener('change', renderTasks);
@@ -30,6 +30,7 @@ function handleAddTask(e) {
   const newTask = {
     id: Date.now().toString(),
     title: taskTitle.value.trim(),
+    description: taskDescription.value.trim(), // NEW (2): save the description
     category: taskCategory.value,
     priority: taskPriority.value,
     status: 'todo'
@@ -45,7 +46,7 @@ function handleAddTask(e) {
 
 // Update status of a task
 function updateTaskStatus(id, newStatus) {
-  tasks = tasks.map(task => 
+  tasks = tasks.map(task =>
     task.id === id ? { ...task, status: newStatus } : task
   );
   saveTasks();
@@ -106,6 +107,7 @@ function createTaskCard(task) {
 
   card.innerHTML = `
     <div class="task-card-title">${escapeHtml(task.title)}</div>
+    ${task.description ? `<p class="task-card-description">${escapeHtml(task.description)}</p>` : ''}
     <div class="task-meta">
       <span>${task.category}</span>
       <span>${task.priority} Priority</span>
