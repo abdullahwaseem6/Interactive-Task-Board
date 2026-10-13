@@ -15,10 +15,13 @@
 <body>
   <div class="app-container">
     <header class="app-header">
+      <!-- Theme button (script.js switches between dark and light) -->
+      <button type="button" id="theme-toggle" class="theme-toggle">☀️ Light mode</button>
+
       <h1>ABS611 BOARD</h1>
       <p>Plan the sprint, move the cards, finish the work.</p>
 
-      <!-- NEW: task counter (the numbers are filled in by script.js) -->
+      <!-- Task counter (the numbers are filled in by script.js) -->
       <p class="task-summary">
         <span><strong id="count-active">0</strong> active</span>
         <span><strong id="count-done">0</strong> completed</span>

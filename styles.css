@@ -1,9 +1,10 @@
 /* =========================================================
    ABS611 Board - styles
-   All colours live in :root, so the whole look can be
-   changed (or swapped for a light theme) in one place.
+   All colours live in variables, so the whole look can be
+   swapped (dark <-> light) by changing them in one place.
    ========================================================= */
 
+/* Dark theme (default) */
 :root {
   color-scheme: dark; /* tells the browser to draw dropdowns and scrollbars in dark style */
 
@@ -31,6 +32,32 @@
   --priority-high: #ff5f56;   /* coral red */
 }
 
+/* Light theme: same variable names, different values.
+   script.js adds data-theme="light" to <html> to switch. */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-primary: #f4f4f6;
+  --input-bg: #ffffff;
+  --column-bg: #ebebef;
+  --surface: #ffffff;
+  --card-bg: #ffffff;
+
+  --text-main: #121216;
+  --text-muted: #5f5f6b;
+
+  --accent-color: #121216; /* black button in light mode */
+  --accent-text: #ffffff;
+  --accent-hover: #34343c;
+  --border-color: #d9d9e0;
+  --shadow: 0 8px 24px rgba(18, 18, 22, 0.08);
+
+  /* Slightly darker priority colours so they stay readable on white */
+  --priority-low: #1e9e57;
+  --priority-medium: #c98a0c;
+  --priority-high: #e0443a;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -43,6 +70,7 @@ body {
   color: var(--text-main);
   line-height: 1.6;
   padding: 20px;
+  transition: background-color 0.25s ease, color 0.25s ease; /* smooth theme switch */
 }
 
 .app-container {
@@ -50,8 +78,16 @@ body {
   margin: 0 auto;
 }
 
+/* Visible outline when using the keyboard (Tab key) */
+button:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--text-muted);
+  outline-offset: 2px;
+}
+
 /* Header */
 .app-header {
+  position: relative; /* lets the theme button sit in the top-right corner */
   text-align: center;
   margin: 20px 0 36px;
 }
@@ -67,7 +103,27 @@ body {
   color: var(--text-muted);
 }
 
-/* NEW: task counter in the header */
+/* Theme button, top-right of the header */
+.theme-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 6px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 999px; /* pill shape */
+  background: var(--surface);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--text-muted);
+}
+
+/* Task counter in the header */
 .task-summary {
   display: flex;
   justify-content: center;
@@ -150,7 +206,8 @@ input[type="text"] {
 /* Board Layout */
 .board-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* min(300px, 100%) stops columns overflowing on very narrow phones */
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 20px;
 }
 
@@ -162,6 +219,13 @@ input[type="text"] {
   min-height: 450px;
   display: flex;
   flex-direction: column;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+/* Drag and drop: the column a card is being dragged over */
+.column.drag-over {
+  border: 1px dashed var(--text-muted);
+  background-color: var(--surface);
 }
 
 .column-header {
@@ -195,6 +259,16 @@ input[type="text"] {
   flex-grow: 1;
 }
 
+/* Message shown in an empty column */
+.empty-column {
+  padding: 20px 10px;
+  border: 1px dashed var(--border-color);
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
 /* Task Cards */
 .task-card {
   background: var(--card-bg);
@@ -205,6 +279,16 @@ input[type="text"] {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  cursor: grab; /* hand cursor: shows the card can be dragged */
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+/* The card while it is being dragged */
+.task-card.dragging {
+  opacity: 0.4;
 }
 
 /* Priority colour: the left edge of the card */
@@ -220,6 +304,7 @@ input[type="text"] {
 .task-card-title {
   font-weight: 800;
   font-size: 1rem;
+  overflow-wrap: anywhere;
 }
 
 .task-card-description {
@@ -256,4 +341,48 @@ input[type="text"] {
 
 .btn-danger:hover {
   text-decoration: underline;
+}
+
+/* =========================================================
+   Phones (screens narrower than 600px)
+   ========================================================= */
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+
+  .app-header {
+    margin: 8px 0 24px;
+  }
+
+  /* Theme button sits above the title instead of floating in the corner */
+  .theme-toggle {
+    position: static;
+    margin-bottom: 12px;
+  }
+
+  .app-header h1 {
+    font-size: 2rem;
+  }
+
+  .controls-section {
+    padding: 14px;
+  }
+
+  /* Every form field and the button take a full row */
+  .task-form > *,
+  .filter-bar > * {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  /* Description goes back right under the title on phones */
+  #task-description {
+    order: 0;
+  }
+
+  /* Columns stack, so they don't need to be tall */
+  .column {
+    min-height: 0;
+  }
 }
